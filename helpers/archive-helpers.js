@@ -26,16 +26,29 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+	// read list of URLs in our current hard drive / sites storage place
+		// "should read urls from sites.txt"
+	// what's with the callback? Do we do something to our list within this fxn?
 };
 
 exports.isUrlInList = function(url, callback) {
+	// is URL in our list?
+		// i.e. is URL in our array in sites.txt
+	// what's with the callback? Do we do something to our list within this fxn?
 };
 
 exports.addUrlToList = function(url, callback) {
+	// if isURLInList === false, then add it to our list
+	// perhaps we can use the callback to add url to the list in a certain way?
+	// like filter it first?
 };
 
 exports.isUrlArchived = function(url, callback) {
+	// check if we've already archived URL
+	// what's with the callback? Do we do something to our list within this fxn?
+	// callback: if false --> run downloadUrls ?
 };
 
 exports.downloadUrls = function(urls) {
+	// If we haven't archived URL, let's download and add it to our archive
 };
