@@ -28,5 +28,13 @@ exports.handleRequest = function (req, res) {
         res.end(data);
       });
     }
+  } else if (req.method === 'POST') {
+    fs.readFile(`./web/public/loading.html`, (err, data) => {
+      if (err) { throw err; }
+      res.writeHead(303, {
+        'Content-Type': 'text/html'
+      });
+      res.end(data);
+    });
   }
 };
