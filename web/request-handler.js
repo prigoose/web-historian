@@ -8,23 +8,25 @@ const fs = require('fs');
 exports.handleRequest = function (req, res) {
   console.log('req method: ', req.method, ', request url: ', req.url);
   // if it's a basic GET request for ip + port only --> show them index.html
-  if ((! path.basename(req.url) ) && req.method === 'GET') {
-    fs.readFile('./web/public/index.html', (err, data) => {
-      if (err) { throw err; }
-      var statusCode = 200;
-      res.writeHead(statusCode, {
-        'Content-Type': 'text/html' 
+  if (req.method === 'GET') {
+    if (path.extname(req.url) === '.ico') { 
+      res.writeHead(404);
+      res.end();
+    } else {
+      var basename = path.basename(req.url) || 'index.html';
+      fs.readFile(`./web/public/${basename}`, (err, data) => {
+        if (err) { throw err; }
+        var statusCode = 200;
+        if (basename.includes('.html')) {
+          var contentType = 'text/html';
+        } else if (path.extname(req.url) === '.css') {
+          var contentType = 'text/css';
+        }
+        res.writeHead(statusCode, {
+          'Content-Type': contentType
+        });
+        res.end(data);
       });
-      res.end(data);
-    });
-  } else if (path.basename(req.url) === 'styles.css' && req.method === 'GET') {
-    fs.readFile('./web/public/styles.css', (err, data) => {
-      if (err) { throw err; }
-      var statusCode = 200;
-      res.writeHead(statusCode, {
-        'Content-Type': 'text/css' 
-      });
-      res.end(data);
-    });
+    }
   }
 };
