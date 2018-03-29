@@ -29,12 +29,22 @@ exports.handleRequest = function (req, res) {
       });
     }
   } else if (req.method === 'POST') {
-    fs.readFile(`./web/public/loading.html`, (err, data) => {
-      if (err) { throw err; }
-      res.writeHead(303, {
-        'Content-Type': 'text/html'
+    var submittedUrl = '';
+    req.on('data', (chunk) => { 
+      submittedUrl += chunk; 
+    });
+    req.on('end', () => {
+      fs.writeFile(archive.paths.list, `${submittedUrl.slice(4)}\n`, (err) => {
+        if (err) { throw err; }
+        console.log(`${submittedUrl} has been added to sites.txt`);
       });
-      res.end(data);
+      fs.readFile('./web/public/loading.html', (err, data) => {
+        if (err) { throw err; }
+        res.writeHead(302, {
+          'Content-Type': 'text/html'
+        });
+        res.end(data);
+      });
     });
   }
 };
