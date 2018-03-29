@@ -9,10 +9,7 @@ exports.handleRequest = function (req, res) {
   console.log('req method: ', req.method, ', request url: ', req.url);
   // if it's a basic GET request for ip + port only --> show them index.html
   if (req.method === 'GET') {
-    if (path.extname(req.url) === '.ico') { 
-      res.writeHead(404);
-      res.end();
-    } else {
+    if (path.extname(req.url) === '.html' || path.extname(req.url) === '.css' || req.url === '/') { 
       var basename = path.basename(req.url) || 'index.html';
       fs.readFile(`./web/public/${basename}`, (err, data) => {
         if (err) { throw err; }
@@ -27,6 +24,9 @@ exports.handleRequest = function (req, res) {
         });
         res.end(data);
       });
+    } else {
+      res.writeHead(404);
+      res.end();
     }
   } else if (req.method === 'POST') {
     var submittedUrl = '';
