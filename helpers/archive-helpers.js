@@ -38,7 +38,12 @@ exports.readListOfUrls = function(callback) {
 
 exports.isUrlInList = function(url, callback) {
   exports.readListOfUrls((urls) => callback(urls.includes(url)));
-  //callback(urls.includes(url));
+  //Take a callback that wants a Boolean
+  //Specifically: 
+  // If not in list, add the URL
+  // If in list, call isUrlArchived with the callback:
+  //  If archived, post it to user
+  //  If not archived, tell the user to hang on
 };
 
 exports.addUrlToList = function(url, callback) {
@@ -46,8 +51,9 @@ exports.addUrlToList = function(url, callback) {
   var simpleURL = splitURL[splitURL.length - 1];
   fs.writeFile(exports.paths.list, `${simpleURL}\n`, (err) => {
     if (err) { throw err; }
-    console.log(`${url} has been added to ${exports.paths.list}`);
+    console.log(`${url} has been added to ${exports.paths.list}, yeet`);
     callback(); // Think about why this is here
+    // Sam G. says that Danny says that the tests may just be dysfunctional
   });
 };
 

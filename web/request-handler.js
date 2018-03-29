@@ -34,6 +34,8 @@ exports.handleRequest = function (req, res) {
       submittedUrl += chunk; 
     });
     req.on('end', () => {
+      // Instead of running addUrl
+      // run isUrlInList with appropriate callback
       archive.addUrlToList(submittedUrl, function() {});
       fs.readFile('./web/public/loading.html', (err, data) => {
         if (err) { throw err; }
