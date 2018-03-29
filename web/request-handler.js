@@ -34,10 +34,7 @@ exports.handleRequest = function (req, res) {
       submittedUrl += chunk; 
     });
     req.on('end', () => {
-      fs.writeFile(archive.paths.list, `${submittedUrl.slice(4)}\n`, (err) => {
-        if (err) { throw err; }
-        console.log(`${submittedUrl} has been added to sites.txt`);
-      });
+      archive.addUrlToList(submittedUrl);
       fs.readFile('./web/public/loading.html', (err, data) => {
         if (err) { throw err; }
         res.writeHead(302, {
