@@ -11,7 +11,7 @@ exports.handleRequest = function (req, res) {
   if (req.method === 'GET') {
     if (path.extname(req.url) === '.html' || path.extname(req.url) === '.css' || req.url === '/') { 
       var basename = path.basename(req.url) || 'index.html';
-      fs.readFile(`./web/public/${basename}`, (err, data) => {
+      fs.readFile(`${__dirname}/public/${basename}`, (err, data) => {
         if (err) { throw err; }
         var statusCode = 200;
         if (basename.includes('.html')) {
@@ -37,7 +37,7 @@ exports.handleRequest = function (req, res) {
       // Instead of running addUrl
       // run isUrlInList with appropriate callback
       archive.addUrlToList(submittedUrl, function() {});
-      fs.readFile('./web/public/loading.html', (err, data) => {
+      fs.readFile(`${__dirname}/public/loading.html`, (err, data) => {
         if (err) { throw err; }
         res.writeHead(302, {
           'Content-Type': 'text/html'
