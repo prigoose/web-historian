@@ -34,7 +34,7 @@ exports.handleRequest = function (req, res) {
       submittedUrl += chunk; 
     });
     req.on('end', () => {
-      archive.addUrlToList(submittedUrl);
+      archive.addUrlToList(submittedUrl, function() {});
       fs.readFile('./web/public/loading.html', (err, data) => {
         if (err) { throw err; }
         res.writeHead(302, {

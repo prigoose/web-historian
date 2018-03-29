@@ -9,6 +9,8 @@ var _ = require('underscore');
  * customize it in any way you wish.
  */
 
+var urls;
+
 exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
@@ -27,30 +29,32 @@ exports.initialize = function(pathsObj) {
 
 exports.readListOfUrls = function(callback) {
   // read list of URLs in our current hard drive / sites storage place
-  // "should read urls from sites.txt"
-  // what's with the callback? Do we do something to our list within this fxn?
+  fs.readFile(exports.paths.list, 'utf8', (err, data) => {
+    if (err) { throw err; }
+    urls = data.split('\n');
+    callback(urls);  
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
-  // is URL in our list?
-  // i.e. is URL in our array in sites.txt
-  // what's with the callback? Do we do something to our list within this fxn?
+  exports.readListOfUrls((urls) => callback(urls.includes(url)));
+  //callback(urls.includes(url));
 };
 
 exports.addUrlToList = function(url, callback) {
-  // if isURLInList === false, then add it to our list
-  // perhaps we can use the callback to add url to the list in a certain way?
-  // like filter it first?
-  fs.writeFile(exports.paths.list, `${url.slice(4)}\n`, (err) => {
+  var splitURL = url.split('=');
+  var simpleURL = splitURL[splitURL.length - 1];
+  fs.writeFile(exports.paths.list, `${simpleURL}\n`, (err) => {
     if (err) { throw err; }
-    console.log(`${url} has been added to sites.txt`);
+    console.log(`${url} has been added to ${exports.paths.list}`);
+    callback(); // Think about why this is here
   });
 };
 
 exports.isUrlArchived = function(url, callback) {
-  // check if we've already archived URL
-  // what's with the callback? Do we do something to our list within this fxn?
-  // callback: if false --> run downloadUrls ?
+  fs.access(exports.paths.archivedSites + '/' + url, fs.constants.F_OK, (err) => {
+    callback(err ? false : true);
+  });
 };
 
 exports.downloadUrls = function(urls) {
