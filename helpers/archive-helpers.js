@@ -48,9 +48,7 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  var splitURL = url.split('=');
-  var simpleURL = splitURL[splitURL.length - 1];
-  fs.writeFile(exports.paths.list, `${simpleURL}\n`, (err) => {
+  fs.writeFile(exports.paths.list, `${url}\n`, (err) => {
     if (err) { throw err; }
     console.log(`${url} has been added to ${exports.paths.list}, yeet`);
     callback(); // Think about why this is here
@@ -59,6 +57,7 @@ exports.addUrlToList = function(url, callback) {
 };
 
 exports.isUrlArchived = function(url, callback) {
+  console.log(exports.paths.archivedSites + '/' + url);
   fs.access(exports.paths.archivedSites + '/' + url, fs.constants.F_OK, (err) => {
     callback(!err ? true : false, url);
   });

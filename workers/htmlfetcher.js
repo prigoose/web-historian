@@ -6,8 +6,6 @@ const fs = require('fs');
 const archives = require('../helpers/archive-helpers');
 
 exports.archiveURL = function(url) {
-  
-  // var simpleURL = url.split('/')[2];
   var newFolder = archives.paths.archivedSites + '/' + url;
   fs.mkdirSync(newFolder);
   

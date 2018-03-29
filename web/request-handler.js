@@ -34,16 +34,28 @@ exports.handleRequest = function (req, res) {
       submittedUrl += chunk; 
     });
     req.on('end', () => {
-      // Instead of running addUrl
-      // run isUrlInList with appropriate callback
-      archive.addUrlToList(submittedUrl, function() {});
-      fs.readFile(`${__dirname}/public/loading.html`, (err, data) => {
-        if (err) { throw err; }
-        res.writeHead(302, {
-          'Content-Type': 'text/html'
-        });
-        res.end(data);
-      });
+      var splitURL = submittedUrl.split('=');
+      var simpleURL = splitURL[splitURL.length - 1];
+      var respondToArchiveStatus = (isArchived, url) => {
+        if (isArchived) {
+          fs.readFile(path.join(__dirname, '../archives/sites', url, 'index.html'), (err, data) => {
+            if (err) { throw err; }
+            res.writeHead(200, {
+              'Content-Type': 'text/html'
+            });
+            res.end(data);
+          });         
+        } else {
+          fs.readFile(`${__dirname}/public/loading.html`, (err, data) => {
+            if (err) { throw err; }
+            res.writeHead(302, {
+              'Content-Type': 'text/html'
+            });
+            res.end(data);
+          });
+        }
+      };
+      archive.isUrlArchived(simpleURL, respondToArchiveStatus);
     });
   }
 };
