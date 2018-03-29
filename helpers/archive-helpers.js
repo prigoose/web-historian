@@ -38,7 +38,7 @@ exports.readListOfUrls = function(callback) {
 };
 
 exports.isUrlInList = function(url, callback) {
-  exports.readListOfUrls((urls) => callback(urls.includes(url)));
+  exports.readListOfUrls((urls) => callback(urls.includes(url), url));
   //Take a callback that wants a Boolean
   //Specifically: 
   // If not in list, add the URL

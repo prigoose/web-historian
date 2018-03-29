@@ -36,6 +36,11 @@ exports.handleRequest = function (req, res) {
     req.on('end', () => {
       var splitURL = submittedUrl.split('=');
       var simpleURL = splitURL[splitURL.length - 1];
+      var respondToListStatus = (isInList, url) => {
+        if (!isInList) {
+          archive.addUrlToList(url, function() {});
+        }
+      };
       var respondToArchiveStatus = (isArchived, url) => {
         if (isArchived) {
           fs.readFile(path.join(__dirname, '../archives/sites', url, 'index.html'), (err, data) => {
@@ -46,13 +51,11 @@ exports.handleRequest = function (req, res) {
             res.end(data);
           });         
         } else {
-          fs.readFile(`${__dirname}/public/loading.html`, (err, data) => {
-            if (err) { throw err; }
-            res.writeHead(302, {
-              'Content-Type': 'text/html'
-            });
-            res.end(data);
+          archive.isUrlInList(simpleURL, respondToListStatus);
+          res.writeHead(302, {
+            'Location': '/loading.html'
           });
+          res.end();
         }
       };
       archive.isUrlArchived(simpleURL, respondToArchiveStatus);
