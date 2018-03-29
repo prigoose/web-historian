@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var htmlfetcher = require('../workers/htmlfetcher.js');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -59,10 +60,18 @@ exports.addUrlToList = function(url, callback) {
 
 exports.isUrlArchived = function(url, callback) {
   fs.access(exports.paths.archivedSites + '/' + url, fs.constants.F_OK, (err) => {
-    callback(err ? false : true);
+    callback(!err ? true : false, url);
   });
 };
 
 exports.downloadUrls = function(urls) {
   // If we haven't archived URL, let's download and add it to our archive
+  urls.forEach((url) =>
+    exports.isUrlArchived(url, function(isArchived, url) {
+      if (!isArchived) {
+        htmlfetcher.archiveURL(url);
+      }
+    })
+  );
 };
+

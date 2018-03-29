@@ -1,6 +1,7 @@
 var http = require('http');
 var handler = require('./request-handler');
 var initialize = require('./initialize.js');
+var archivehelpers = require('../helpers/archive-helpers.js');
 //var htmlfetcher = require('../workers/htmlfetcher.js') // For testing
 
 // Why do you think we have this here?
@@ -10,7 +11,7 @@ So instead we initialize our necessary folder structure
 (archive / sites, sites.txt)*/ 
 initialize('./archives');
 //htmlfetcher.archiveURL('http://www.facebook.com'); // For testing
-
+//archivehelpers.downloadUrls(['http://www.facebook.com', 'http://www.reddit.com']);
 
 var port = 8080;
 var ip = '127.0.0.1';
