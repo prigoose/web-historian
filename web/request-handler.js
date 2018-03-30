@@ -43,7 +43,7 @@ exports.handleRequest = function (req, res) {
       };
       var respondToArchiveStatus = (isArchived, url) => {
         if (isArchived) {
-          fs.readFile(path.join(__dirname, '../archives/sites', url, 'index.html'), (err, data) => {
+          fs.readFile(path.join(__dirname, '../archives/sites', url), (err, data) => {
             if (err) { throw err; }
             res.writeHead(200, {
               'Content-Type': 'text/html'
