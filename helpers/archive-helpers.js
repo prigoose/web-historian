@@ -1,7 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
-var htmlfetcher = require('../workers/htmlfetcher.js');
+const request = require('request');
+
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -48,12 +49,7 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  fs.writeFile(exports.paths.list, `${url}\n`, (err) => {
-    if (err) { throw err; }
-    console.log(`${url} has been added to ${exports.paths.list}, yeet`);
-    callback(); // Think about why this is here
-    // Sam G. says that Danny says that the tests may just be dysfunctional
-  });
+  fs.appendFile(exports.paths.list, url + '\n', callback);
 };
 
 exports.isUrlArchived = function(url, callback) {
@@ -68,7 +64,7 @@ exports.downloadUrls = function(urls) {
   urls.forEach((url) =>
     exports.isUrlArchived(url, function(isArchived, url) {
       if (!isArchived) {
-        htmlfetcher.archiveURL(url);
+        request(`http://${url}`).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
       }
     })
   );
